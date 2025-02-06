@@ -50,6 +50,6 @@
 - Ajout de nouveaux types d'améliorations et de bonus pour rendre le jeu encore plus captivant.
 - Amélioration de l'interface utilisateur pour une meilleure expérience de jeu.
 
-### Version 0.1
+### Version 0.2
 
 # MFLAMORANGELS ❤️

@@ -1,14 +1,53 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/button";
+import AutoClicker from "@/components/AutoClicker";
+import clickb1 from "./assets/clickb1.mp3";
+import clickb2 from "./assets/clickb2.mp3";
+import clickb3 from "./assets/clickb3.mp3";
+import clickb4 from "./assets/clickb4.mp3";
+import clickb5 from "./assets/clickb5.mp3";
+import clickb6 from "./assets/clickb6.mp3";
+import clickb7 from "./assets/clickb7.mp3";
+import buy1 from "./assets/buy1.mp3";
+import buy2 from "./assets/buy2.mp3";
+import buy3 from "./assets/buy3.mp3";
+import buy4 from "./assets/buy4.mp3";
 
 export default function App() {
-  const [total, setTotal] = useState(0.0);
+  const [total, setTotal] = useState(0);
   const [perClick, setPerClick] = useState(1);
   const [upgradeCost, setUpgradeCost] = useState(10);
-  const [autoClickers, setAutoClickers] = useState([]); // Tableau d'auto-clickers
-  const [autoClickerBaseCost, setAutoClickerBaseCost] = useState(50); // Coût de base du premier auto-clicker
-  const [autoClicker2BaseCost, setAutoClicker2BaseCost] = useState(1000); // Coût de base du deuxième auto-clicker
-  const [autoClickerLevels, setAutoClickerLevels] = useState([]); // Tableau pour suivre le niveau de chaque auto-clicker
+  const [autoClickers, setAutoClickers] = useState([]);
+  const [autoClickerLevels, setAutoClickerLevels] = useState([]);
+
+  const autoClickerTypes = [
+    { id: 1, rate: 1, baseCost: 50 },
+    { id: 2, rate: 5, baseCost: 1000 },
+    { id: 3, rate: 20, baseCost: 5000 },
+    { id: 4, rate: 100, baseCost: 20000 },
+  ];
+
+  const playRandomClickSound = () => {
+    const sounds = [clickb1, clickb2, clickb3, clickb4, clickb5, clickb6, clickb7, ];
+    const randomSound = sounds[Math.floor(Math.random() * sounds.length)];
+
+    const audioElement = new Audio(randomSound);
+    audioElement.volume = 0.3;
+    audioElement
+      .play()
+      .catch((error) => console.error("Erreur de lecture audio:", error));
+  };
+
+  const playRandomBuySound = () => {
+    const sounds = [buy1, buy2, buy3, buy4];
+    const randomSound = sounds[Math.floor(Math.random() * sounds.length)];
+
+    const audioElement = new Audio(randomSound);
+    audioElement.volume = 0.3;
+    audioElement
+      .play()
+      .catch((error) => console.error("Erreur de lecture audio:", error));
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -23,16 +62,7 @@ export default function App() {
   }, [autoClickers, autoClickerLevels]);
 
   useEffect(() => {
-    const updateTitle = () => {
-      document.title = `${total} Points Factory Clicker`;
-    };
-
-    document.addEventListener("visibilitychange", updateTitle);
-    updateTitle();
-
-    return () => {
-      document.removeEventListener("visibilitychange", updateTitle);
-    };
+    document.title = `${total} Points | Factory Clicker`;
   }, [total]);
 
   const handleClick = () => {
@@ -47,9 +77,15 @@ export default function App() {
     }
   };
 
-  const handleAutoClickerPurchaseOrUpgrade = (autoClickerId, rate, baseCost) => {
+  const handleAutoClickerPurchaseOrUpgrade = (
+    autoClickerId,
+    rate,
+    baseCost
+  ) => {
     // Vérifie si l'auto-clicker a été acheté
-    const clickerIndex = autoClickers.findIndex((clicker) => clicker.id === autoClickerId);
+    const clickerIndex = autoClickers.findIndex(
+      (clicker) => clicker.id === autoClickerId
+    );
 
     if (clickerIndex === -1) {
       // Acheter un Auto Clicker
@@ -109,47 +145,51 @@ export default function App() {
         Factory Clicker
       </h1>
       <p className="text-lg mb-2">Total Points: {total}</p>
-      <p className="text-lg mb-2">Points per second: {pointsPerSecond}</p> {/* Affichage des points générés par seconde */}
+      <p className="text-lg mb-2">Points per second: {pointsPerSecond}</p>
+
       <div className="p-4 mb-4 w-64 text-center">
-        <Button className="w-full" onClick={handleClick}>
+        <Button
+          className="w-full"
+          onClick={() => {
+            playRandomClickSound();
+            handleClick();
+          }}
+        >
           Click here (+{perClick})
         </Button>
       </div>
+
       <div className="p-4 w-64 text-center">
         <Button
           className="w-full"
-          onClick={buyUpgrade}
+          onClick={() => {
+            if (total >= upgradeCost) {
+              buyUpgrade();
+              playRandomBuySound();
+            }
+          }}
           disabled={total < upgradeCost}
         >
-          Upgrade Click (+1) - Cost: {upgradeCost}
+          Upgrade Click (+100) - Cost: {upgradeCost}
         </Button>
       </div>
 
-      {/* Auto Clicker 1 */}
-      <div className="p-4 w-64 text-center mt-4">
-        <Button
-          className="w-full"
-          onClick={() => handleAutoClickerPurchaseOrUpgrade(1, 1, autoClickerBaseCost)}
-          disabled={total < (autoClickers.find((clicker) => clicker.id === 1)?.cost || autoClickerBaseCost)}
-        >
-          {autoClickers.find((clicker) => clicker.id === 1)
-            ? `Upgrade Auto Clicker 1 (Level: ${autoClickerLevels[autoClickers.findIndex((clicker) => clicker.id === 1)]}) - ${autoClickers.find((clicker) => clicker.id === 1)?.rate * autoClickerLevels[autoClickers.findIndex((clicker) => clicker.id === 1)]} points/s - Cost: ${autoClickers.find((clicker) => clicker.id === 1)?.cost}`
-            : `Buy Auto Clicker 1 (+1/s) - Cost: ${autoClickerBaseCost}`}
-        </Button>
-      </div>
-
-      {/* Auto Clicker 2 */}
-      <div className="p-4 w-64 text-center mt-4">
-        <Button
-          className="w-full"
-          onClick={() => handleAutoClickerPurchaseOrUpgrade(2, 5, autoClicker2BaseCost)}
-          disabled={total < (autoClickers.find((clicker) => clicker.id === 2)?.cost || autoClicker2BaseCost)}
-        >
-          {autoClickers.find((clicker) => clicker.id === 2)
-            ? `Upgrade Auto Clicker 2 (Level: ${autoClickerLevels[autoClickers.findIndex((clicker) => clicker.id === 2)]})  - ${autoClickers.find((clicker) => clicker.id === 2)?.rate * autoClickerLevels[autoClickers.findIndex((clicker) => clicker.id === 2)]} points/s - Cost: ${autoClickers.find((clicker) => clicker.id === 2)?.cost}`
-            : `Buy Auto Clicker 2 (+5/s) - Cost: ${autoClicker2BaseCost}`}
-        </Button>
-      </div>
+      {/* Générer dynamiquement les AutoClickers */}
+      {autoClickerTypes.map((clicker) => (
+        <AutoClicker
+          key={clicker.id}
+          id={clicker.id}
+          rate={clicker.rate}
+          baseCost={clicker.baseCost}
+          total={total}
+          setTotal={setTotal}
+          autoClickers={autoClickers}
+          setAutoClickers={setAutoClickers}
+          autoClickerLevels={autoClickerLevels}
+          setAutoClickerLevels={setAutoClickerLevels}
+          playRandomBuySound={playRandomBuySound}
+        />
+      ))}
     </div>
   );
 }
