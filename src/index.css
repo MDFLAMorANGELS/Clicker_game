@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+* {
+  user-select: none;
+}
+
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -7,13 +11,14 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+  color: rgba(255, 255, 255, 0.9);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 
 #root {
   margin: 0 auto;
@@ -22,17 +27,112 @@
 
 body {
   margin: 0;
-  min-height: 100vh;
+  font-family: 'Merriweather', Georgia, serif;
 }
 
-h1 {
-  -webkit-text-stroke: 1px;
-  -webkit-text-stroke-color: rgb(0, 0, 0);
+.text-shadows {
+  text-shadow: 0px 2px 6px #000, 0px 1px 1px #000;
 }
-
 
 a{
   font-size: 22px;
   text-decoration: none;
   color: white;
 }
+
+/* CHAUDRON */
+
+
+.smoke-container {
+  position: absolute;
+  top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.smoke {
+  position: absolute;
+  width: 30px;
+  height: 40px;
+  background: radial-gradient(circle, rgba(127, 189, 103, 0.76) 20%, rgba(255, 255, 255, 0) 70%);
+  border-radius: 50%;
+  opacity: 0;
+  animation: smoke-rise 3s infinite ease-in-out;
+}
+
+.smoke.delay {
+  animation-delay: 1s;
+}
+
+.smoke.delay2 {
+  animation-delay: 2s;
+}
+
+@keyframes smoke-rise {
+  0% {
+    transform: translateY(0) scale(0.8);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-40px) translateX(10px) scale(1.2);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-80px) translateX(-20px) scale(1.5);
+    opacity: 0;
+  }
+}
+
+
+.chaudron-img {
+  width: 400px;
+  clip-path: polygon(27% 40%, 36% 12%, 51% 0%, 71% 14%, 73% 37%, 71% 46%, 80% 58%, 71% 80%, 82% 84%, 17% 94%, 30% 77%, 18% 59%);
+}
+
+.cauldron-image-container {
+  display: inline-block;
+  overflow: hidden;
+}
+
+
+/* Animation de zoom/dezoom au clic */
+@keyframes zoomEffect {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05); /* Légèrement plus grand */
+  }
+  100% {
+    transform: scale(1); /* Retour à la taille normale */
+  }
+}
+
+/* Animation de zoom/dezoom au survol */
+.chaudron-img:hover {
+  transform: scale(1.04); /* Grossissement au survol */
+  transition: transform 0.5s ease-in-out; /* Transition douce */
+}
+
+/* La classe d'animation activée lors du clic */
+.chaudron-img.zooming {
+  animation: zoomEffect 0.6s ease-in-out;
+}
+
+@keyframes fadeUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+}
+
+.animate-fadeUp {
+  animation: fadeUp 1s ease-out forwards;
+}
+
+/* CHAUDRON */
