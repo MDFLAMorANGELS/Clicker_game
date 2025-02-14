@@ -4,9 +4,9 @@
 
 ## Fonctionnalités
 
-- **Clics manuels** : Cliquez sur le bouton pour gagner des points.
-- **Amélioration de clics** : Achetez des améliorations pour augmenter le nombre de points gagnés par clic.
-- **Auto-clickers** : Achetez des auto-clickers qui génèrent des points automatiquement au fil du temps.
+- **Clics manuels** : Cliquez sur le chaudron pour gagner des potions.
+- **Amélioration de clics** : Achetez des améliorations pour augmenter le nombre de potions gagnés par clic.
+- **Auto-clickers** : Achetez des auto-clickers qui génèrent des potions automatiquement au fil du temps.
 - **Améliorations des auto-clickers** : Augmentez le niveau de vos auto-clickers pour améliorer leur efficacité.
 
 ## Technologies utilisées
@@ -37,11 +37,11 @@
 
 ## Fonctionnement du jeu
 
-1. Clics : Chaque clic sur le bouton "Click here" vous rapporte des points, en fonction de votre niveau de clic actuel.
-2. Amélioration de clics : Vous pouvez acheter une amélioration de clic pour augmenter le nombre de points gagnés par clic. Chaque amélioration augmente la valeur du clic et rend les futures améliorations plus chères.
-3. Auto-clickers : Vous pouvez acheter des auto-clickers qui génèrent des points à un taux régulier, en fonction de leur niveau.
-4. Améliorations des auto-clickers : Chaque auto-clicker peut être amélioré pour augmenter sa production de points. Chaque amélioration augmente le coût de l'auto-clicker.
-5. Points générés par seconde : Vous pouvez voir en temps réel combien de points sont générés automatiquement chaque seconde par vos auto-clickers en fonction de leur taux de génération et de leur niveau.
+1. Clics : Chaque clic sur le chaudron vous rapporte des potions, en fonction de votre niveau de clic actuel.
+2. Amélioration de clics : Vous pouvez acheter une amélioration de clic pour augmenter le nombre de potions gagnés par clic. Chaque amélioration augmente la valeur du clic et rend les futures améliorations plus chères.
+3. Auto-clickers : Vous pouvez acheter des auto-clickers qui génèrent des potions à un taux régulier, en fonction de leur niveau.
+4. Améliorations des auto-clickers : Chaque auto-clicker peut être amélioré pour augmenter sa production de potions. Chaque amélioration augmente le coût de l'auto-clicker.
+5. potions générés par seconde : Vous pouvez voir en temps réel combien de potions sont générés automatiquement chaque seconde par vos auto-clickers en fonction de leur taux de génération et de leur niveau.
 
 ## Fonctionnalités à venir
 
@@ -50,6 +50,6 @@
 - Ajout de nouveaux types d'améliorations et de bonus pour rendre le jeu encore plus captivant.
 - Amélioration de l'interface utilisateur pour une meilleure expérience de jeu.
 
-### Version 0.2
+### Version 0.3
 
 # MFLAMORANGELS ❤️
