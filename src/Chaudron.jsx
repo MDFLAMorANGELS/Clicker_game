@@ -5,7 +5,7 @@ const Chaudron = ({ handleClickOnCauldron }) => {
   const [isZooming, setIsZooming] = useState(false);
 
   const handleClick = (event) => {
-    handleClickOnCauldron(event); // Passer l'événement ici
+    handleClickOnCauldron(event);
     setIsZooming(true); 
   
     setTimeout(() => {
@@ -16,15 +16,14 @@ const Chaudron = ({ handleClickOnCauldron }) => {
   
 
   return (
-    <div className="relative flex justify-center items-center overflow-visible">
-      {/* Conteneur spécifique pour l'image */}
+    <div className="relative flex justify-center items-center overflow-visible ">
       <div className="cauldron-image-container">
         <img 
           className={`chaudron-img ${isZooming ? "zooming" : ""}`} 
           src={chaudron} 
           alt="Chaudron" 
           draggable="false" 
-          onClick={handleClick} // Gérer le clic
+          onClick={handleClick}
         />
       </div>
 

@@ -8,6 +8,7 @@
 - **Amélioration de clics** : Achetez des améliorations pour augmenter le nombre de potions gagnés par clic.
 - **Auto-clickers** : Achetez des auto-clickers qui génèrent des potions automatiquement au fil du temps.
 - **Améliorations des auto-clickers** : Augmentez le niveau de vos auto-clickers pour améliorer leur efficacité.
+- **Sauvegarde** : Sauvegarde effectuer dans le LocalStorage.
 
 ## Technologies utilisées
 
@@ -46,10 +47,10 @@
 ## Fonctionnalités à venir
 
 - Ajout de nouveaux types d'auto-clickers avec des taux de production différents.
-- Système de sauvegarde des progrès pour pouvoir reprendre là où vous vous êtes arrêté.
+- Amélioration du Système de sauvegarde des progrès pour pouvoir reprendre là où vous vous êtes arrêté.
 - Ajout de nouveaux types d'améliorations et de bonus pour rendre le jeu encore plus captivant.
 - Amélioration de l'interface utilisateur pour une meilleure expérience de jeu.
 
-### Version 0.3
+### Version 0.4
 
 # MFLAMORANGELS ❤️

@@ -1,24 +1,15 @@
 import { useState, useEffect } from "react";
-import { Button } from "@/components/button";
 import AutoClicker from "@/components/AutoClicker";
 import Chaudron from "./Chaudron";
-import clickb1 from "./assets/sound/clickb1.mp3";
-import clickb2 from "./assets/sound/clickb2.mp3";
-import clickb3 from "./assets/sound/clickb3.mp3";
-import clickb4 from "./assets/sound/clickb4.mp3";
-import clickb5 from "./assets/sound/clickb5.mp3";
-import clickb6 from "./assets/sound/clickb6.mp3";
-import clickb7 from "./assets/sound/clickb7.mp3";
-import buy1 from "./assets/sound/buy1.mp3";
-import buy2 from "./assets/sound/buy2.mp3";
-import buy3 from "./assets/sound/buy3.mp3";
-import buy4 from "./assets/sound/buy4.mp3";
-import { Cursor } from "./Cursor";
-import sorciere from "./assets/image/sorciere1.png";
-import ferme from "./assets/image/ferme.png";
-import mine from "./assets/image/mine.png";
-import usine from "./assets/image/usine.png";
+import Fire from "./Fire";
+import "./Fire.css";
 import potion from "@/assets/image/potion.png";
+import { loadGame } from "./utils/saveManager.js";
+import autoClickerTypes from "./data/autoClikerTypes";
+import {
+  playRandomClickSound,
+  playRandomBuySound,
+} from "./assets/sound/sounds";
 
 export default function App() {
   const [total, setTotal] = useState(0);
@@ -28,68 +19,31 @@ export default function App() {
   const [autoClickerLevels, setAutoClickerLevels] = useState([]);
   const [, setClickUpgradeLevel] = useState(0);
   const [clickEffects, setClickEffects] = useState([]);
-  const [unlockedAutoClickers, setUnlockedAutoClickers] = useState([]);
 
+  useEffect(() => {
+    console.log("Chargement du jeu au montage");
+    loadGame(setTotal, setAutoClickers, setAutoClickerLevels);
+  }, []); // Chargement des données du jeux
 
-  const autoClickerTypes = [
-    { id: 1, rate: 1, baseCost: 10, image: <Cursor />, name: "Curseur" },
-    {
-      id: 2,
-      rate: 2,
-      baseCost: 20,
-      image: <img src={sorciere} className="w-[50px] h-[50px] " />,
-      name: "Sorciere",
-    },
-    {
-      id: 3,
-      rate: 30,
-      baseCost: 30,
-      image: <img src={ferme} className="w-[50px] h-[50px]" />,
-      name: "Ferme",
-    },
-    {
-      id: 4,
-      rate: 40,
-      baseCost: 40,
-      image: <img src={mine} className="w-[50px] h-[50px]" />,
-      name: "Mine",
-    },
-    {
-      id: 5,
-      rate: 50,
-      baseCost: 50,
-      image: <img src={usine} className="w-[50px] h-[50px]" />,
-      name: "Usine",
-    },
-  ];
+  const saveGameTotal = (newTotal) => {
+    const savedState = localStorage.getItem("autoClickerGameState");
 
-  const playRandomClickSound = () => {
-    const sounds = [
-      clickb1,
-      clickb2,
-      clickb3,
-      clickb4,
-      clickb5,
-      clickb6,
-      clickb7,
-    ];
-    const randomSound = sounds[Math.floor(Math.random() * sounds.length)];
-    const audioElement = new Audio(randomSound);
-    audioElement.volume = 0.3;
-    audioElement
-      .play()
-      .catch((error) => console.error("Erreur de lecture audio:", error));
+    if (savedState) {
+      const gameState = JSON.parse(savedState);
+      gameState.total = newTotal;
+      localStorage.setItem("autoClickerGameState", JSON.stringify(gameState));
+    } else {
+      console.log(
+        "Aucune donnée trouvée dans localStorage pour l'état du jeu."
+      );
+    }
   };
 
-  const playRandomBuySound = () => {
-    const sounds = [buy1, buy2, buy3, buy4];
-    const randomSound = sounds[Math.floor(Math.random() * sounds.length)];
-    const audioElement = new Audio(randomSound);
-    audioElement.volume = 0.3;
-    audioElement
-      .play()
-      .catch((error) => console.error("Erreur de lecture audio:", error));
-  };
+  useEffect(() => {
+    if (total !== 0) {
+      saveGameTotal(total);
+    }
+  }, [total]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -97,24 +51,22 @@ export default function App() {
         (acc, clicker, index) => acc + clicker.rate * autoClickerLevels[index],
         0
       );
-      setTotal((prev) => prev + pointsFromAutoClickers);
+      setTotal((prev) => Math.round((prev + pointsFromAutoClickers) * 10) / 10);
     }, 1000);
     return () => clearInterval(interval);
   }, [autoClickers, autoClickerLevels]);
 
   useEffect(() => {
-    document.title = `${total} Points | Factory Clicker`;
+    document.title = `${total} Potion | Factory Clicker`;
   }, [total]);
 
   // Gestion du clic sur le chaudron
   const handleClickOnCauldron = (event) => {
-    setTotal((prev) => prev + perClick);
+    setTotal((prev) => Math.round((prev + perClick) * 10) / 10);
     playRandomClickSound();
 
-    // Obtenir la position du clic
     const { clientX, clientY } = event;
 
-    // Ajouter un effet de texte temporaire
     const newEffect = {
       id: Date.now(),
       x: clientX,
@@ -123,7 +75,6 @@ export default function App() {
     };
     setClickEffects((prev) => [...prev, newEffect]);
 
-    // Supprimer l'effet après 3 secondes
     setTimeout(() => {
       setClickEffects((prev) =>
         prev.filter((effect) => effect.id !== newEffect.id)
@@ -133,29 +84,41 @@ export default function App() {
 
   const buyUpgrade = () => {
     if (total >= upgradeCost) {
-      setTotal((prev) => prev - upgradeCost);
+      setTotal((prev) => Math.round((prev - upgradeCost) * 10) / 10);
       setPerClick((prev) => prev + 100); // Augmenter le clic de 100 par upgrade
       setUpgradeCost((prev) => Math.ceil(prev * 1.5));
       setClickUpgradeLevel((prev) => prev + 1);
     }
   };
 
-  const pointsPerSecond = autoClickers.reduce(
-    (acc, clicker, index) => acc + clicker.rate * autoClickerLevels[index],
-    0
-  );
+  const pointsPerSecond =
+    Math.round(
+      autoClickers.reduce(
+        (acc, clicker, index) => acc + clicker.rate * autoClickerLevels[index],
+        0
+      ) * 10
+    ) / 10;
 
   return (
     <div className="flex items-center justify-between min-h-screen border-r-gray-600">
-      <div className="flex flex-col items-center justify-center pt-12 pl-8 h-[100vh] bg-gray-700">
-        <h1 className="text-5xl font-bold mb-4 drop-shadow-xl">
-          Factory Clicker
-        </h1>
-        <p className="text-lg mb-2">Total Points: {total}</p>
-        <p className="text-lg mb-2">Points per second: {pointsPerSecond}</p>
+      <div className="flex flex-col items-center justify-around w-1/3 h-[100vh] bg-gray-700">
+        <div className="w-full flex flex-col justify-center items-center">
+          <h1 className="text-3xl font-bold drop-shadow-xl bg-gray-800 p-2 w-3/4 text-center mb-3 rounded-2xl">
+            Potion Clicker
+          </h1>
+          <div className="bg-gray-800 w-full pt-3 pb-1">
+            <p className="text-xl mb-2 leading-3">
+              {Math.floor(total)} Potions
+            </p>
+            <p className="text-sm mb-2 leading-3">
+              per second: {pointsPerSecond}
+            </p>
+          </div>
+        </div>
 
-        <div className="mb-4 text-center mt-12 justify-center flex">
+        <div className="text-center flex flex-col items-center">
           <Chaudron handleClickOnCauldron={handleClickOnCauldron} />
+          <Fire />
           <div className="absolute top-0 left-0 pointer-events-none">
             {clickEffects.map((effect) => (
               <div
@@ -171,13 +134,14 @@ export default function App() {
         </div>
       </div>
 
-      <div className="flex flex-col  items-center w-72 pr-4 pt-4 h-[100vh] bg-gray-700">
-        <h2 className="text-4xl font-bold mb-4 drop-shadow-xl text-center">
+      <div className="flex flex-col  items-center w-72 pt-4 h-[100vh] bg-gray-700">
+        <h2 className="text-3xl font-bold mb-4 drop-shadow-xl text-center">
           Boutique
         </h2>
         <div className="w-full">
           <p className="text-left">Amelioration</p>
-          <Button
+
+          <button
             className=" flex items-center w-full p-3 rounded bg-slate-400 text-white border-4 border-slate-500"
             onClick={() => {
               if (total >= upgradeCost) {
@@ -190,7 +154,7 @@ export default function App() {
             {/* Upgrade Click (+100) - Level: {clickUpgradeLevel} - Cost:{" "}
                 {upgradeCost} */}
             <p className="">Curseur</p>
-          </Button>
+          </button>
         </div>
 
         <div className="w-full ">
@@ -204,6 +168,7 @@ export default function App() {
               baseCost={clicker.baseCost}
               image={clicker.image}
               name={clicker.name}
+              description={clicker.description}
               total={total}
               setTotal={setTotal}
               autoClickers={autoClickers}
@@ -211,6 +176,7 @@ export default function App() {
               autoClickerLevels={autoClickerLevels}
               setAutoClickerLevels={setAutoClickerLevels}
               playRandomBuySound={playRandomBuySound}
+              pointsPerSecond={pointsPerSecond}
             />
           ))}
         </div>
